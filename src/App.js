@@ -1,27 +1,63 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
+import { Route } from 'react-router-dom';
 import * as BooksApi from './BooksAPI';
+import './App.css';
 import BookList from './components/BookList';
+import SearchBooks from './components/SearchBooks';
 
 class App extends Component {
   state = {
     books: [],
-    shelf: '',
+    loading: false,
+    error: false,
   };
 
   componentDidMount() {
+    this.fetchBooks();
+  }
+
+  fetchBooks = () => {
+    this.setState({ loading: true });
     BooksApi.getAll().then((books) => {
-      this.setState({ books });
+      this.setState({
+        books,
+        loading: false,
+      });
+    }).catch(() => {
+      this.setState({
+        error: true,
+      });
+    });
+  }
+
+  updateBook = (book, shelf) => {
+    BooksApi.update(book, shelf).then(() => {
+      this.fetchBooks();
     });
   }
 
   render() {
-    const { books } = this.state;
-    console.log('bla', this.state.books);
-    console.log('the shel', this.state.shelf);
+    const { books, loading, error } = this.state;
     return (
-      <div>
-        <BookList books={books} />
+      <div className="app">
+        <Route exact path="/" render={() => ( /*eslint-disable-line*/
+          <BookList
+            updateBook={this.updateBook}
+            books={books}
+            loading={loading}
+            error={error}
+          />
+        )}
+        />
+        <Route
+          path="/search"
+          render={() => (
+            <SearchBooks
+              updateBook={this.updateBook}
+              books={books}
+            />
+          )}
+        />
       </div>
     );
   }
