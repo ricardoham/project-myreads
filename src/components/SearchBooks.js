@@ -39,8 +39,21 @@ class SearchBooks extends Component {
     updateBook(book, shelf);
   }
 
+  renderBooks() {
+    const { books } = this.state;
+    return _.map(books, (book) => {
+      return (
+        <Books
+          key={book.id}
+          book={book}
+          updateBook={(shelf) => { this.updateBook(book, shelf); }}
+        />
+      );
+    });
+  }
+
   render() {
-    const { query, books } = this.state;
+    const { query } = this.state;
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -55,15 +68,7 @@ class SearchBooks extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {
-            query.length > 0 && _.map(books, book => (
-              <Books
-                key={book.id}
-                book={book}
-                updateBook={(shelf) => { this.updateBook(book, shelf); }}
-              />
-            ))
-          }
+            { query.length > 0 && this.renderBooks(query) }
           </ol>
         </div>
       </div>

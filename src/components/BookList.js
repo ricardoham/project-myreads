@@ -13,10 +13,21 @@ class BookList extends React.PureComponent {
     updateBook: PropTypes.func.isRequired,
   }
 
+  renderShelves(currentShelf, shelfTitle) {
+    const { books, updateBook } = this.props;
+    return (
+      <BookShelf
+        books={_.filter(books, book => (
+          book.shelf === currentShelf
+        ))}
+        shelfTitle={shelfTitle}
+        updateBook={updateBook}
+      />
+    );
+  }
+
   render() {
-    const {
-      books, loading, error, updateBook,
-    } = this.props;
+    const { loading, error } = this.props;
     if (loading) {
       return (
         <div>
@@ -26,7 +37,7 @@ class BookList extends React.PureComponent {
     } if (error) {
       return (
         <div>
-          An error occured during the process...
+          An error occurred during the process...
         </div>
       );
     }
@@ -36,27 +47,9 @@ class BookList extends React.PureComponent {
           <h1>MyReads</h1>
         </div>
         <div className="list-books-content">
-          <BookShelf
-            books={_.filter(books, book => (
-              book.shelf === 'currentlyReading'
-            ))}
-            shelfTitle="Currently Reading"
-            updateBook={updateBook}
-          />
-          <BookShelf
-            books={_.filter(books, book => (
-              book.shelf === 'wantToRead'
-            ))}
-            shelfTitle="Want to Read"
-            updateBook={updateBook}
-          />
-          <BookShelf
-            books={_.filter(books, book => (
-              book.shelf === 'read'
-            ))}
-            shelfTitle="Read"
-            updateBook={updateBook}
-          />
+          {this.renderShelves('currentlyReading', 'Currently Reading')}
+          {this.renderShelves('wantToRead', 'Want to Read')}
+          {this.renderShelves('read', 'Read')}
         </div>
         <div className="open-search">
           <Link to="/search">Add a book</Link>
