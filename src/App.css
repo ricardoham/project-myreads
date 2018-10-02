@@ -172,3 +172,10 @@ body, .app {
   text-align: center;
   font-size: 0.8em;
 }
+
+/* Extra Loading Feature */
+.loading {
+  font-weight: 2em;
+  color: #2e7d32;
+  letter-spacing: 2px;
+}

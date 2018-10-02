@@ -8,33 +8,29 @@ import BookShelf from './BookShelf';
 class BookList extends React.PureComponent {
   static propTypes = {
     books: PropTypes.array.isRequired,  /*eslint-disable-line*/
-    loading: PropTypes.bool.isRequired,
     error: PropTypes.bool.isRequired,
     updateBook: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
   }
 
   renderShelves(currentShelf, shelfTitle) {
-    const { books, updateBook } = this.props;
+    const { books, updateBook, loading } = this.props;
+    const filterBook = _.filter(books, book => (
+      book.shelf === currentShelf
+    ));
     return (
       <BookShelf
-        books={_.filter(books, book => (
-          book.shelf === currentShelf
-        ))}
+        books={filterBook}
         shelfTitle={shelfTitle}
         updateBook={updateBook}
+        loading={loading}
       />
     );
   }
 
   render() {
-    const { loading, error } = this.props;
-    if (loading) {
-      return (
-        <div>
-          Loading...
-        </div>
-      );
-    } if (error) {
+    const { error } = this.props;
+    if (error) {
       return (
         <div>
           An error occurred during the process...

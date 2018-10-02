@@ -9,6 +9,7 @@ class BookShelf extends React.PureComponent {
     books: PropTypes.array.isRequired, /*eslint-disable-line*/
     shelfTitle: PropTypes.string.isRequired,
     updateBook: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
   }
 
   updateBook = (book, shelf) => {
@@ -17,16 +18,19 @@ class BookShelf extends React.PureComponent {
   }
 
   renderBooks() {
-    const { books } = this.props;
-    return _.map(books, (book) => {
+    const { books, loading } = this.props;
+    if (loading) {
       return (
-        <Books
-          key={book.id}
-          book={book}
-          updateBook={(shelf) => { this.updateBook(book, shelf); }}
-        />
+        <span className="loading">Loading Shelves...</span>
       );
-    });
+    }
+    return _.map(books, book => (
+      <Books
+        key={book.id}
+        book={book}
+        updateBook={(shelf) => { this.updateBook(book, shelf); }}
+      />
+    ));
   }
 
   render() {
